@@ -1,0 +1,10 @@
+{% extends "hotel/base.html" %}
+{% block title %}Список бронирований{% endblock %}
+{% block content %}
+<h1>Бронирования</h1>
+<table><tr><th>ID</th><th>Гость</th><th>Номер</th><th>Дата заезда</th><th>Дата выезда</th><th>Статус</th><th>Сумма</th></tr>
+{% for b in bookings %}
+<tr><td><a href="{% url 'booking_detail' b.id %}">{{ b.id }}</a></td><td>{{ b.guest.full_name }}</td><td>{{ b.room.number }}</td><td>{{ b.check_in }}</td><td>{{ b.check_out }}</td><td>{{ b.get_status_display }}</td><td>{{ b.total_price }}</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

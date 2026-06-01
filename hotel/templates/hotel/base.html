@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="UTF-8"><title>{% block title %}HotelPro{% endblock %}</title>
+<style>body { font-family: Arial, sans-serif; margin: 20px; } nav { margin-bottom: 20px; } nav a { margin-right: 10px; } .messages { color: green; } .error { color: red; } table { border-collapse: collapse; width: 100%; } th, td { border: 1px solid #aaa; padding: 6px; text-align: left; }</style>
+</head>
+<body>
+<nav><a href="{% url 'booking_list' %}">Главная</a> <a href="{% url 'booking_create' %}">Новая бронь</a> <a href="/admin/">Админка</a></nav>
+{% if messages %}<ul class="messages">{% for message in messages %}<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>{% endfor %}</ul>{% endif %}
+{% block content %}{% endblock %}
+</body>
+</html>

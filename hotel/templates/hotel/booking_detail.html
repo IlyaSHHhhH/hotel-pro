@@ -1,0 +1,32 @@
+{% extends "hotel/base.html" %}
+{% block title %}Бронь №{{ booking.id }}{% endblock %}
+{% block content %}
+<h1>Бронь №{{ booking.id }}</h1>
+<p><strong>Гость:</strong> {{ booking.guest.full_name }}</p>
+<p><strong>Номер:</strong> {{ booking.room.number }} ({{ booking.room.get_category_display }})</p>
+<p><strong>Даты:</strong> {{ booking.check_in }} – {{ booking.check_out }}</p>
+<p><strong>Статус:</strong> {{ booking.get_status_display }}</p>
+<p><strong>Питание:</strong> {{ booking.get_meal_plan_display }}</p>
+<p><strong>Стоимость:</strong> {{ booking.total_price }} ₽</p>
+
+<h3>Услуги</h3>
+<ul>
+{% for charge in charges %}
+<li>{{ charge.date }} – {{ charge.service.name }} x{{ charge.quantity }} ({{ charge.service.price }} ₽/ед.)</li>
+{% empty %}<li>Нет дополнительных услуг</li>{% endfor %}
+</ul>
+
+{% if booking.status == 'confirmed' %}
+<form method="post" action="{% url 'booking_checkin' booking.id %}">{% csrf_token %}<button type="submit">Заселить</button></form>
+{% elif booking.status == 'checked_in' %}
+<form method="post" action="{% url 'booking_checkout' booking.id %}">{% csrf_token %}<button type="submit">Выселить</button></form>
+<h3>Добавить услугу</h3>
+<form method="post" action="{% url 'add_charge' booking.id %}">{% csrf_token %}
+<select name="service_id">{% for s in services %}<option value="{{ s.id }}">{{ s.name }} ({{ s.price }} ₽)</option>{% endfor %}</select>
+<input type="number" name="quantity" value="1" min="1">
+<input type="date" name="date" value="{% now 'Y-m-d' %}">
+<button type="submit">Добавить</button>
+</form>
+{% endif %}
+<a href="{% url 'booking_list' %}">Назад к списку</a>
+{% endblock %}
